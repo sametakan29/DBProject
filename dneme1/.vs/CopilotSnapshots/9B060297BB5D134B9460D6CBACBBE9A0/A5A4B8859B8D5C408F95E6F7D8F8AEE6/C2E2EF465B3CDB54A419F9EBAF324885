@@ -1,0 +1,144 @@
+﻿namespace dneme1
+{
+    partial class PigmentsForm
+    {
+        private System.Windows.Forms.FlowLayoutPanel flwPigments;
+        private System.Windows.Forms.NumericUpDown numAdjust;
+        private System.Windows.Forms.Button btnAddAmount;
+        private System.Windows.Forms.Button btnRemoveAmount;
+        private System.Windows.Forms.Button btnRefresh;
+        private System.Windows.Forms.Label lblSelected;
+
+        /// <summary>
+        /// Required designer variable.
+        /// </summary>
+        private System.ComponentModel.IContainer components = null;
+
+        /// <summary>
+        /// Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && (components != null))
+            {
+                components.Dispose();
+            }
+            base.Dispose(disposing);
+        }
+
+        #region Windows Form Designer generated code
+
+        /// <summary>
+        /// Required method for Designer support - do not modify
+        /// the contents of this method with the code editor.
+        /// </summary>
+        private void InitializeComponent()
+        {
+            this.flwPigments = new System.Windows.Forms.FlowLayoutPanel();
+            this.numAdjust = new System.Windows.Forms.NumericUpDown();
+            this.btnAddAmount = new System.Windows.Forms.Button();
+            this.btnRemoveAmount = new System.Windows.Forms.Button();
+            this.btnRefresh = new System.Windows.Forms.Button();
+            this.lblSelected = new System.Windows.Forms.Label();
+            ((System.ComponentModel.ISupportInitialize)(this.numAdjust)).BeginInit();
+            this.SuspendLayout();
+            // 
+            // flwPigments
+            // 
+            this.flwPigments.AutoScroll = true;
+            this.flwPigments.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(250)))), ((int)(((byte)(250)))), ((int)(((byte)(252)))));
+            this.flwPigments.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.flwPigments.Location = new System.Drawing.Point(10, 50);
+            this.flwPigments.Name = "flwPigments";
+            this.flwPigments.Padding = new System.Windows.Forms.Padding(15);
+            this.flwPigments.Size = new System.Drawing.Size(970, 340);
+            this.flwPigments.TabIndex = 0;
+            this.flwPigments.WrapContents = true;
+            // 
+            // numAdjust
+            // 
+            this.numAdjust.DecimalPlaces = 2;
+            this.numAdjust.Font = new System.Drawing.Font("Arial", 10F);
+            this.numAdjust.Location = new System.Drawing.Point(80, 407);
+            this.numAdjust.Maximum = new decimal(new int[] {
+            100000,
+            0,
+            0,
+            0});
+            this.numAdjust.Name = "numAdjust";
+            this.numAdjust.Size = new System.Drawing.Size(100, 27);
+            this.numAdjust.TabIndex = 1;
+            // 
+            // btnAddAmount
+            // 
+            this.btnAddAmount.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(76)))), ((int)(((byte)(175)))), ((int)(((byte)(80)))));
+            this.btnAddAmount.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnAddAmount.Font = new System.Drawing.Font("Arial", 10F, System.Drawing.FontStyle.Bold);
+            this.btnAddAmount.ForeColor = System.Drawing.Color.White;
+            this.btnAddAmount.Location = new System.Drawing.Point(200, 407);
+            this.btnAddAmount.Name = "btnAddAmount";
+            this.btnAddAmount.Size = new System.Drawing.Size(120, 30);
+            this.btnAddAmount.TabIndex = 2;
+            this.btnAddAmount.Text = "+ Ekle";
+            this.btnAddAmount.UseVisualStyleBackColor = false;
+            this.btnAddAmount.Click += new System.EventHandler(this.btnAddAmount_Click);
+            // 
+            // btnRemoveAmount
+            // 
+            this.btnRemoveAmount.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(244)))), ((int)(((byte)(67)))), ((int)(((byte)(54)))));
+            this.btnRemoveAmount.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnRemoveAmount.Font = new System.Drawing.Font("Arial", 10F, System.Drawing.FontStyle.Bold);
+            this.btnRemoveAmount.ForeColor = System.Drawing.Color.White;
+            this.btnRemoveAmount.Location = new System.Drawing.Point(330, 407);
+            this.btnRemoveAmount.Name = "btnRemoveAmount";
+            this.btnRemoveAmount.Size = new System.Drawing.Size(120, 30);
+            this.btnRemoveAmount.TabIndex = 3;
+            this.btnRemoveAmount.Text = "- Çıkar";
+            this.btnRemoveAmount.UseVisualStyleBackColor = false;
+            this.btnRemoveAmount.Click += new System.EventHandler(this.btnRemoveAmount_Click);
+            // 
+            // btnRefresh
+            // 
+            this.btnRefresh.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(150)))), ((int)(((byte)(243)))));
+            this.btnRefresh.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnRefresh.Font = new System.Drawing.Font("Arial", 10F);
+            this.btnRefresh.ForeColor = System.Drawing.Color.White;
+            this.btnRefresh.Location = new System.Drawing.Point(460, 407);
+            this.btnRefresh.Name = "btnRefresh";
+            this.btnRefresh.Size = new System.Drawing.Size(100, 30);
+            this.btnRefresh.TabIndex = 4;
+            this.btnRefresh.Text = "Yenile";
+            this.btnRefresh.UseVisualStyleBackColor = false;
+            this.btnRefresh.Click += new System.EventHandler(this.btnRefresh_Click);
+            // 
+            // lblSelected
+            // 
+            this.lblSelected.Font = new System.Drawing.Font("Arial", 10F, System.Drawing.FontStyle.Italic);
+            this.lblSelected.Location = new System.Drawing.Point(580, 412);
+            this.lblSelected.Name = "lblSelected";
+            this.lblSelected.Size = new System.Drawing.Size(380, 23);
+            this.lblSelected.TabIndex = 5;
+            this.lblSelected.Text = "Seçili: Yok";
+            // 
+            // PigmentsForm
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(245)))));
+            this.ClientSize = new System.Drawing.Size(1000, 650);
+            this.Controls.Add(this.lblSelected);
+            this.Controls.Add(this.btnRefresh);
+            this.Controls.Add(this.btnRemoveAmount);
+            this.Controls.Add(this.btnAddAmount);
+            this.Controls.Add(this.numAdjust);
+            this.Controls.Add(this.flwPigments);
+            this.Name = "PigmentsForm";
+            this.Text = "Pigment Hazneleri";
+            ((System.ComponentModel.ISupportInitialize)(this.numAdjust)).EndInit();
+            this.ResumeLayout(false);
+        }
+
+        #endregion
+    }
+}

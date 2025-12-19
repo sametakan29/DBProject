@@ -1,0 +1,235 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Windows.Forms;
+using Npgsql;
+
+namespace dneme1
+{
+    public partial class AnaForm : Form
+    {
+        // Bağlantı bilgileri
+        private const string Host = "localhost";
+        private const string Port = "5432";
+        private const string Database = "boyamakinedevami";
+        private const string Username = "postgres";
+        private const string Password = "admin";
+
+        private static string ConnectionString =>//bağlantı bilgilerini birleştirir
+            $"Host={Host};Port={Port};Database={Database};Username={Username};Password={Password}";
+
+        /// Yeni bir PostgreSQL bağlantısı oluşturur
+        public static NpgsqlConnection GetConnection()
+        {
+            return new NpgsqlConnection(ConnectionString);
+        }
+
+        /// Veritabanı bağlantısını test eder
+        public static bool TestConnection(out string errorMessage)
+        {
+            errorMessage = string.Empty;
+            try
+            {
+                using (var connection = GetConnection())
+                {
+                    connection.Open();
+                    return true;
+                }
+            }
+            catch (Exception ex)
+            {
+                errorMessage = ex.Message;
+                return false;
+            }
+        }
+
+        public AnaForm()
+        {
+            InitializeComponent();
+        }
+
+        private void AnaForm_Load(object sender, EventArgs e)
+        {
+            BakimUyarilariniGetir();
+            PersonelDoldur();
+            BakimListDoldur();
+        }
+
+        private void boyaYapBttn_Click(object sender, EventArgs e)
+        {
+            BoyaYap frm = new BoyaYap();
+            frm.Show(); //formu göster
+
+        }
+
+        private void haznelerBttn_Click(object sender, EventArgs e)
+        {
+            hazneler frm = new hazneler();
+            frm.Show(); //formu göster
+        }
+
+        private void dükkanEkleToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void personelEkleToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void bakimBttn_Click(object sender, EventArgs e)
+        {
+            if (girisCombBox.SelectedIndex == -1)
+            {
+                MessageBox.Show("Lütfen bir personel seçiniz!");
+                return;
+            }
+
+            if (bakimList.SelectedIndex == -1)
+            {
+                MessageBox.Show("Lütfen bakım yapılacak parçayı seçiniz!");
+                return;
+            }
+
+            int personelRolNo = (int)((KeyValuePair<int, string>)girisCombBox.SelectedItem).Key;
+            string parcaAdi = bakimList.SelectedItem.ToString();
+
+            BakimYap(personelRolNo, parcaAdi);
+        }
+
+
+        private void bakimList_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+        private void BakimUyarilariniGetir()
+        {
+            try
+            {
+                using (var conn = DatabaseHelper.GetConnection())
+                {
+                    conn.Open();
+
+                    string query = "SELECT * FROM public.bakim_uyarilari();";
+
+                    using (var cmd = new NpgsqlCommand(query, conn))
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            // Fonksiyondaki kolona birebir uyumlu
+                            string parcaAdi = reader["parca_adi"].ToString();
+                            string sonBakim = reader["son_bakim_tarihi"] == DBNull.Value
+                                ? "Yok"
+                                : Convert.ToDateTime(reader["son_bakim_tarihi"]).ToShortDateString();
+
+                            string gecenGun = reader["gecen_gun"].ToString();
+                            string periyot = reader["bakim_periyodu"].ToString();
+                            string durum = reader["durum"].ToString();
+                            string mesaj = reader["uyari_mesaji"].ToString();
+
+                            // ListBox varsa oraya bas
+                            bakimList.Items.Add(mesaj);
+
+                            // İstersen debug için:
+                            // MessageBox.Show(mesaj);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Hata: " + ex.Message);
+            }
+        }
+
+
+        private void girisCombBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+        private void PersonelDoldur()
+        {
+            try
+            {
+                using (var conn = DatabaseHelper.GetConnection())
+                {
+                    conn.Open();
+
+                    string query = "SELECT rolno, personelad FROM personel ORDER BY personelad";
+
+                    using (var cmd = new NpgsqlCommand(query, conn))
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        Dictionary<int, string> personeller = new Dictionary<int, string>();
+
+                        while (reader.Read())
+                        {
+                            int rolno = Convert.ToInt32(reader["rolno"]);
+                            string ad = reader["personelad"].ToString();
+
+                            personeller.Add(rolno, ad);
+                        }
+
+                        girisCombBox.DataSource = new BindingSource(personeller, null);
+                        girisCombBox.DisplayMember = "Value"; // görünen isim
+                        girisCombBox.ValueMember = "Key";     // arka planda rolno
+                        girisCombBox.SelectedIndex = -1;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Personel yüklenemedi: " + ex.Message);
+            }
+        }
+        private void BakimListDoldur()
+        {
+            bakimList.Items.Clear();
+
+            bakimList.Items.Add("Karıştırıcı Motor");
+            bakimList.Items.Add("Boya Pompası");
+            bakimList.Items.Add("Filtre Sistemi");
+        }
+        private void BakimYap(int personelRolNo, string parcaAdi)
+        {
+            try
+            {
+                using (var conn = DatabaseHelper.GetConnection())
+                {
+                    conn.Open();
+
+                    string query = "SELECT * FROM public.bakim_yap(@rolno, @parca);";
+
+                    using (var cmd = new NpgsqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@rolno", personelRolNo);
+                        cmd.Parameters.AddWithValue("@parca", parcaAdi);
+
+                        using (var reader = cmd.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+                                bool basarili = Convert.ToBoolean(reader["basarili"]);
+                                string mesaj = reader["mesaj"].ToString();
+
+                                MessageBox.Show(mesaj);
+
+                                if (basarili)
+                                {
+                                    // Bakim listesini yenilemek istersen:
+                                    // BakimUyarilariniGetir();
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Hata: " + ex.Message);
+            }
+        }
+
+    }
+}

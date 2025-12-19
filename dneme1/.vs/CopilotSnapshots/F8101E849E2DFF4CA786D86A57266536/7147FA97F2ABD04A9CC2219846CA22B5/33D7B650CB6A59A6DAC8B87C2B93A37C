@@ -1,0 +1,85 @@
+﻿using System;
+using System.Drawing;
+using System.Windows.Forms;
+
+namespace dneme1
+{
+    public partial class HaznelerForm : Form
+    {
+        // Labels
+        private Label[] labels = new Label[12];
+        // ProgressBars
+        private ProgressBar[] progressBars = new ProgressBar[12];
+        // Ekle Buttons
+        private Button[] ekleButtons = new Button[12];
+        // Cikar Buttons
+        private Button[] cikarButtons = new Button[12];
+
+        public HaznelerForm()
+        {
+            InitializeComponent();
+        }
+
+        private void HaznelerForm_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void InitializeComponent()
+        {
+            this.SuspendLayout();
+
+            int startX = 20;
+            int startY = 20;
+            int rowHeight = 45;
+
+            for (int i = 0; i < 12; i++)
+            {
+                int yPos = startY + (i * rowHeight);
+
+                // Label
+                labels[i] = new Label();
+                labels[i].Text = "pig-" + (i + 1);
+                labels[i].Location = new Point(startX, yPos + 5);
+                labels[i].Size = new Size(60, 25);
+                labels[i].Name = "label" + (i + 1);
+                this.Controls.Add(labels[i]);
+
+                // ProgressBar
+                progressBars[i] = new ProgressBar();
+                progressBars[i].Location = new Point(startX + 70, yPos);
+                progressBars[i].Size = new Size(300, 30);
+                progressBars[i].Name = "progressBar" + (i + 1);
+                progressBars[i].Minimum = 0;
+                progressBars[i].Maximum = 100;
+                progressBars[i].Value = 0;
+                this.Controls.Add(progressBars[i]);
+
+                // Ekle Button
+                ekleButtons[i] = new Button();
+                ekleButtons[i].Text = "Ekle";
+                ekleButtons[i].Location = new Point(startX + 380, yPos);
+                ekleButtons[i].Size = new Size(60, 30);
+                ekleButtons[i].Name = "btnEkle" + (i + 1);
+                this.Controls.Add(ekleButtons[i]);
+
+                // Cikar Button
+                cikarButtons[i] = new Button();
+                cikarButtons[i].Text = "Çıkar";
+                cikarButtons[i].Location = new Point(startX + 450, yPos);
+                cikarButtons[i].Size = new Size(60, 30);
+                cikarButtons[i].Name = "btnCikar" + (i + 1);
+                this.Controls.Add(cikarButtons[i]);
+            }
+
+            // 
+            // HaznelerForm
+            // 
+            this.ClientSize = new Size(550, 580);
+            this.Name = "HaznelerForm";
+            this.Text = "Hazneler";
+            this.Load += new EventHandler(this.HaznelerForm_Load);
+            this.ResumeLayout(false);
+        }
+    }
+}

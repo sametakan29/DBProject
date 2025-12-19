@@ -1,0 +1,158 @@
+﻿namespace dneme1
+{
+    partial class HaznelerForm
+    {
+        private System.ComponentModel.IContainer components = null;
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && (components != null))
+            {
+                components.Dispose();
+            }
+            base.Dispose(disposing);
+        }
+
+        #region Windows Form Designer generated code
+
+        private void InitializeComponent()
+        {
+            this.pnlHazneler = new System.Windows.Forms.Panel();
+            this.btnHazneEkle = new System.Windows.Forms.Button();
+            this.btnHazneCikar = new System.Windows.Forms.Button();
+            this.btnYenile = new System.Windows.Forms.Button();
+            this.cmbHazneSecim = new System.Windows.Forms.ComboBox();
+            this.lblHazneSecim = new System.Windows.Forms.Label();
+            this.txtMiktar = new System.Windows.Forms.TextBox();
+            this.lblMiktar = new System.Windows.Forms.Label();
+            this.pnlKontrol = new System.Windows.Forms.Panel();
+            this.pnlKontrol.SuspendLayout();
+            this.SuspendLayout();
+            // 
+            // pnlHazneler
+            // 
+            this.pnlHazneler.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.pnlHazneler.AutoScroll = true;
+            this.pnlHazneler.Location = new System.Drawing.Point(12, 12);
+            this.pnlHazneler.Name = "pnlHazneler";
+            this.pnlHazneler.Size = new System.Drawing.Size(960, 450);
+            this.pnlHazneler.TabIndex = 0;
+            // 
+            // pnlKontrol
+            // 
+            this.pnlKontrol.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.pnlKontrol.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.pnlKontrol.Controls.Add(this.lblHazneSecim);
+            this.pnlKontrol.Controls.Add(this.cmbHazneSecim);
+            this.pnlKontrol.Controls.Add(this.lblMiktar);
+            this.pnlKontrol.Controls.Add(this.txtMiktar);
+            this.pnlKontrol.Controls.Add(this.btnHazneEkle);
+            this.pnlKontrol.Controls.Add(this.btnHazneCikar);
+            this.pnlKontrol.Controls.Add(this.btnYenile);
+            this.pnlKontrol.Location = new System.Drawing.Point(12, 468);
+            this.pnlKontrol.Name = "pnlKontrol";
+            this.pnlKontrol.Size = new System.Drawing.Size(960, 60);
+            this.pnlKontrol.TabIndex = 1;
+            // 
+            // lblHazneSecim
+            // 
+            this.lblHazneSecim.AutoSize = true;
+            this.lblHazneSecim.Location = new System.Drawing.Point(15, 20);
+            this.lblHazneSecim.Name = "lblHazneSecim";
+            this.lblHazneSecim.Size = new System.Drawing.Size(52, 16);
+            this.lblHazneSecim.TabIndex = 0;
+            this.lblHazneSecim.Text = "Hazne:";
+            // 
+            // cmbHazneSecim
+            // 
+            this.cmbHazneSecim.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbHazneSecim.FormattingEnabled = true;
+            this.cmbHazneSecim.Location = new System.Drawing.Point(73, 17);
+            this.cmbHazneSecim.Name = "cmbHazneSecim";
+            this.cmbHazneSecim.Size = new System.Drawing.Size(120, 24);
+            this.cmbHazneSecim.TabIndex = 1;
+            // 
+            // lblMiktar
+            // 
+            this.lblMiktar.AutoSize = true;
+            this.lblMiktar.Location = new System.Drawing.Point(210, 20);
+            this.lblMiktar.Name = "lblMiktar";
+            this.lblMiktar.Size = new System.Drawing.Size(71, 16);
+            this.lblMiktar.TabIndex = 2;
+            this.lblMiktar.Text = "Miktar (kg):";
+            // 
+            // txtMiktar
+            // 
+            this.txtMiktar.Location = new System.Drawing.Point(287, 17);
+            this.txtMiktar.Name = "txtMiktar";
+            this.txtMiktar.Size = new System.Drawing.Size(100, 22);
+            this.txtMiktar.TabIndex = 3;
+            this.txtMiktar.Text = "0";
+            // 
+            // btnHazneEkle
+            // 
+            this.btnHazneEkle.BackColor = System.Drawing.Color.LightGreen;
+            this.btnHazneEkle.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnHazneEkle.Location = new System.Drawing.Point(410, 14);
+            this.btnHazneEkle.Name = "btnHazneEkle";
+            this.btnHazneEkle.Size = new System.Drawing.Size(120, 32);
+            this.btnHazneEkle.TabIndex = 4;
+            this.btnHazneEkle.Text = "Hazneye Ekle";
+            this.btnHazneEkle.UseVisualStyleBackColor = false;
+            this.btnHazneEkle.Click += new System.EventHandler(this.btnHazneEkle_Click);
+            // 
+            // btnHazneCikar
+            // 
+            this.btnHazneCikar.BackColor = System.Drawing.Color.LightCoral;
+            this.btnHazneCikar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnHazneCikar.Location = new System.Drawing.Point(545, 14);
+            this.btnHazneCikar.Name = "btnHazneCikar";
+            this.btnHazneCikar.Size = new System.Drawing.Size(120, 32);
+            this.btnHazneCikar.TabIndex = 5;
+            this.btnHazneCikar.Text = "Hazneden Çıkar";
+            this.btnHazneCikar.UseVisualStyleBackColor = false;
+            this.btnHazneCikar.Click += new System.EventHandler(this.btnHazneCikar_Click);
+            // 
+            // btnYenile
+            // 
+            this.btnYenile.BackColor = System.Drawing.Color.LightSkyBlue;
+            this.btnYenile.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnYenile.Location = new System.Drawing.Point(820, 14);
+            this.btnYenile.Name = "btnYenile";
+            this.btnYenile.Size = new System.Drawing.Size(120, 32);
+            this.btnYenile.TabIndex = 6;
+            this.btnYenile.Text = "Yenile";
+            this.btnYenile.UseVisualStyleBackColor = false;
+            this.btnYenile.Click += new System.EventHandler(this.btnYenile_Click);
+            // 
+            // HaznelerForm
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.ClientSize = new System.Drawing.Size(984, 541);
+            this.Controls.Add(this.pnlKontrol);
+            this.Controls.Add(this.pnlHazneler);
+            this.Name = "HaznelerForm";
+            this.Text = "Hazneler";
+            this.Load += new System.EventHandler(this.HaznelerForm_Load);
+            this.pnlKontrol.ResumeLayout(false);
+            this.pnlKontrol.PerformLayout();
+            this.ResumeLayout(false);
+        }
+
+        #endregion
+
+        private System.Windows.Forms.Panel pnlHazneler;
+        private System.Windows.Forms.Panel pnlKontrol;
+        private System.Windows.Forms.Button btnHazneEkle;
+        private System.Windows.Forms.Button btnHazneCikar;
+        private System.Windows.Forms.Button btnYenile;
+        private System.Windows.Forms.ComboBox cmbHazneSecim;
+        private System.Windows.Forms.Label lblHazneSecim;
+        private System.Windows.Forms.TextBox txtMiktar;
+        private System.Windows.Forms.Label lblMiktar;
+    }
+}

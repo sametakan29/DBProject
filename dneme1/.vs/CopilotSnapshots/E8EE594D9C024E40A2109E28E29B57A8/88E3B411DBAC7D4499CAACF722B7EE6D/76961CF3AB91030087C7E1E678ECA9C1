@@ -1,0 +1,29 @@
+﻿namespace dneme1
+{
+    partial class AnaForm
+    {
+        private System.ComponentModel.IContainer components = null;
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && (components != null))
+            {
+                components.Dispose();
+            }
+            base.Dispose(disposing);
+        }
+
+        private void InitializeComponent()
+        {
+            this.SuspendLayout();
+            // 
+            // AnaForm
+            // 
+            this.ClientSize = new System.Drawing.Size(1117, 582);
+            this.Name = "AnaForm";
+            this.Load += new System.EventHandler(this.AnaForm_Load);
+            this.ResumeLayout(false);
+
+        }
+    }
+}

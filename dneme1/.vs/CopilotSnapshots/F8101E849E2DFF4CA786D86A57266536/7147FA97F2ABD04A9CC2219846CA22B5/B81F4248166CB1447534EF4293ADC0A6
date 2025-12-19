@@ -1,0 +1,48 @@
+﻿using System;
+using System.Drawing;
+using System.Windows.Forms;
+using Npgsql;
+
+namespace dneme1
+{
+    public partial class HaznelerForm : Form
+    {
+        private ProgressBar progressBar1;
+
+        public HaznelerForm()
+        {
+            InitializeComponent();
+        }
+        private void HaznelerForm_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void InitializeComponent()
+        {
+            this.progressBar1 = new System.Windows.Forms.ProgressBar();
+            this.SuspendLayout();
+            // 
+            // progressBar1
+            // 
+            this.progressBar1.Location = new System.Drawing.Point(331, 12);
+            this.progressBar1.Name = "progressBar1";
+            this.progressBar1.Size = new System.Drawing.Size(632, 51);
+            this.progressBar1.TabIndex = 0;
+            this.progressBar1.Click += new System.EventHandler(this.progressBar1_Click);
+            // 
+            // HaznelerForm
+            // 
+            this.ClientSize = new System.Drawing.Size(1128, 651);
+            this.Controls.Add(this.progressBar1);
+            this.Name = "HaznelerForm";
+            this.ResumeLayout(false);
+
+        }
+
+        private void progressBar1_Click(object sender, EventArgs e)
+        {
+
+        }
+    }
+}

@@ -1,0 +1,143 @@
+﻿using System;
+using System.Data;
+using System.Windows.Forms;
+using Npgsql;
+
+namespace dneme1
+{
+    public class PigmentsForm : Form
+    {
+        private DataGridView dgvPigments;
+        private Button btnRefresh;
+        private Button btnAdd;
+        private Button btnRemove;
+        private TextBox txtName;
+        private NumericUpDown numAmount;
+        private Label lblName;
+        private Label lblAmount;
+
+        public PigmentsForm()
+        {
+            InitializeComponent();
+            LoadPigments();
+        }
+
+        private void InitializeComponent()
+        {
+            this.Text = "Pigmentler";
+            this.Width = 700;
+            this.Height = 500;
+            this.StartPosition = FormStartPosition.CenterParent;
+
+            dgvPigments = new DataGridView { Dock = DockStyle.Top, Height = 250, ReadOnly = true, AllowUserToAddRows = false };
+            btnRefresh = new Button { Text = "Yenile", Top = 260, Left = 20, Width = 80 };
+            btnAdd = new Button { Text = "Ekle", Top = 260, Left = 120, Width = 80 };
+            btnRemove = new Button { Text = "Sil", Top = 260, Left = 220, Width = 80 };
+            lblName = new Label { Text = "İsim", Top = 310, Left = 20, Width = 60 };
+            txtName = new TextBox { Top = 330, Left = 20, Width = 150 };
+            lblAmount = new Label { Text = "Miktar", Top = 310, Left = 200, Width = 60 };
+            numAmount = new NumericUpDown { Top = 330, Left = 200, Width = 100, Minimum = 0, Maximum = 100000, DecimalPlaces = 2 };
+
+            btnRefresh.Click += (s, e) => LoadPigments();
+            btnAdd.Click += (s, e) => AddPigment();
+            btnRemove.Click += (s, e) => RemovePigment();
+
+            this.Controls.Add(dgvPigments);
+            this.Controls.Add(btnRefresh);
+            this.Controls.Add(btnAdd);
+            this.Controls.Add(btnRemove);
+            this.Controls.Add(lblName);
+            this.Controls.Add(txtName);
+            this.Controls.Add(lblAmount);
+            this.Controls.Add(numAmount);
+        }
+
+        private NpgsqlConnection CreateConn()
+        {
+            return new NpgsqlConnection("Server=localhost;Port=5432;Database=devam2;User ID=postgres;Password=admin;");
+        }
+
+        private void LoadPigments()
+        {
+            try
+            {
+                using (var conn = CreateConn())
+                {
+                    conn.Open();
+                    using (var cmd = new NpgsqlCommand("SELECT id, isim, miktar FROM pigmentler ORDER BY id", conn))
+                    using (var da = new NpgsqlDataAdapter(cmd))
+                    {
+                        var dt = new DataTable();
+                        da.Fill(dt);
+                        dgvPigments.DataSource = dt;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Yükleme hatası: " + ex.Message);
+            }
+        }
+
+        private void AddPigment()
+        {
+            var name = txtName.Text.Trim();
+            var amount = numAmount.Value;
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                MessageBox.Show("İsim gerekli");
+                return;
+            }
+            try
+            {
+                using (var conn = CreateConn())
+                {
+                    conn.Open();
+                    using (var cmd = new NpgsqlCommand("INSERT INTO pigmentler(isim, miktar) VALUES (@p1, @p2)", conn))
+                    {
+                        cmd.Parameters.AddWithValue("@p1", name);
+                        cmd.Parameters.AddWithValue("@p2", amount);
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+                LoadPigments();
+                txtName.Clear();
+                numAmount.Value = 0;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Ekleme hatası: " + ex.Message);
+            }
+        }
+
+        private void RemovePigment()
+        {
+            if (dgvPigments.CurrentRow == null)
+            {
+                MessageBox.Show("Seçim yok");
+                return;
+            }
+            var idObj = dgvPigments.CurrentRow.Cells["id"].Value;
+            if (idObj == null) return;
+            int id = Convert.ToInt32(idObj);
+            if (MessageBox.Show("Silmek istiyor musunuz?", "Onay", MessageBoxButtons.YesNo) != DialogResult.Yes) return;
+            try
+            {
+                using (var conn = CreateConn())
+                {
+                    conn.Open();
+                    using (var cmd = new NpgsqlCommand("DELETE FROM pigmentler WHERE id=@id", conn))
+                    {
+                        cmd.Parameters.AddWithValue("@id", id);
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+                LoadPigments();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Silme hatası: " + ex.Message);
+            }
+        }
+    }
+}

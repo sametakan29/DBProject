@@ -1,0 +1,166 @@
+﻿using System;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Windows.Forms;
+using Npgsql;
+
+namespace dneme1
+{
+    public class PigmentsForm : Form
+    {
+        private FlowLayoutPanel flwPigments;
+        private NumericUpDown numAdjust;
+        private Button btnAddAmount;
+        private Button btnRemoveAmount;
+        private Button btnRefresh;
+        private Label lblSelected;
+        private int? selectedPigmentId = null;
+        private const decimal MaxCapacityFallback = 10000m;
+
+        public PigmentsForm()
+        {
+            InitializeComponent();
+            LoadPigments();
+        }
+
+        private void InitializeComponent()
+        {
+            Text = "Pigment Hazneleri";
+            Width = 900;
+            Height = 600;
+            StartPosition = FormStartPosition.CenterParent;
+            BackColor = Color.White; // görünürlük için
+
+            flwPigments = new FlowLayoutPanel { Dock = DockStyle.Top, Height = 400, AutoScroll = true, Padding = new Padding(10), WrapContents = true, BackColor = Color.AliceBlue };
+            numAdjust = new NumericUpDown { Left = 20, Top = 420, Width = 120, Minimum = 0, Maximum = 100000, DecimalPlaces = 2 };
+            btnAddAmount = new Button { Left = 160, Top = 420, Width = 100, Text = "+ Ekle" };
+            btnRemoveAmount = new Button { Left = 270, Top = 420, Width = 100, Text = "- Çıkar" };
+            btnRefresh = new Button { Left = 380, Top = 420, Width = 100, Text = "Yenile" };
+            lblSelected = new Label { Left = 500, Top = 425, Width = 320, Text = "Seçili: Yok" };
+
+            btnAddAmount.Click += (s, e) => AdjustAmount(true);
+            btnRemoveAmount.Click += (s, e) => AdjustAmount(false);
+            btnRefresh.Click += (s, e) => LoadPigments();
+
+            Controls.Add(flwPigments);
+            Controls.Add(numAdjust);
+            Controls.Add(btnAddAmount);
+            Controls.Add(btnRemoveAmount);
+            Controls.Add(btnRefresh);
+            Controls.Add(lblSelected);
+        }
+
+        private NpgsqlConnection CreateConn() => new NpgsqlConnection("Server=localhost;Port=5432;Database=devam2;User ID=postgres;Password=admin;");
+
+        private void LoadPigments()
+        {
+            flwPigments.Controls.Clear();
+            selectedPigmentId = null;
+            lblSelected.Text = "Seçili: Yok";
+            try
+            {
+                using (var conn = CreateConn())
+                {
+                    conn.Open();
+                    // Sadece mevcut kolonlar; kapasite yoksa varsayılan kullanılacak
+                    using (var cmd = new NpgsqlCommand("SELECT id, isim, miktar FROM pigmentler ORDER BY id", conn))
+                    using (var da = new NpgsqlDataAdapter(cmd))
+                    {
+                        var dt = new DataTable();
+                        da.Fill(dt);
+                        int count = dt.Rows.Count;
+                        foreach (DataRow row in dt.Rows)
+                        {
+                            int id = Convert.ToInt32(row["id"]);
+                            string name = row["isim"].ToString();
+                            decimal amount = Convert.ToDecimal(row["miktar"]);
+                            flwPigments.Controls.Add(CreatePigmentSlot(id, name, amount, MaxCapacityFallback));
+                        }
+                        int targetMin = 12;
+                        if (count < targetMin)
+                        {
+                            for (int i = count; i < targetMin; i++)
+                            {
+                                flwPigments.Controls.Add(CreateEmptySlot(i + 1));
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Yükleme hatası: " + ex.Message);
+            }
+        }
+
+        private Control CreatePigmentSlot(int id, string name, decimal amount, decimal capacity)
+        {
+            var panel = new Panel { Width = 130, Height = 220, BackColor = Color.Gainsboro, Margin = new Padding(8), Tag = id };
+            var lblName = new Label { Text = name, Dock = DockStyle.Top, Height = 24, TextAlign = ContentAlignment.MiddleCenter, Font = new Font(FontFamily.GenericSansSerif, 9, FontStyle.Bold) };
+            var progress = new ProgressBar { Width = 100, Height = 20, Minimum = 0, Maximum = 1000, Value = 0 };
+            decimal ratio = capacity <= 0 ? 0 : amount / capacity; if (ratio > 1) ratio = 1; progress.Value = (int)(ratio * 1000);
+            var lblAmount = new Label { Text = amount + " / " + capacity, AutoSize = false, Width = 120, Height = 32, TextAlign = ContentAlignment.MiddleCenter };
+            var tank = new Panel { Width = 100, Height = 120, BackColor = Color.WhiteSmoke, BorderStyle = BorderStyle.FixedSingle };
+            int fillHeight = (int)(tank.Height * ratio);
+            var fillPanel = new Panel { Width = tank.Width - 4, Height = fillHeight, BackColor = Color.FromArgb(60, 120, 200), Left = 2, Top = tank.Height - fillHeight - 2 };
+            tank.Controls.Add(fillPanel);
+            panel.Controls.Add(lblAmount);
+            panel.Controls.Add(progress);
+            panel.Controls.Add(tank);
+            panel.Controls.Add(lblName);
+            lblName.Location = new Point(0, 0);
+            tank.Location = new Point(15, 30);
+            progress.Location = new Point(15, 155);
+            lblAmount.Location = new Point(5, 180);
+            panel.Cursor = Cursors.Hand;
+            panel.Click += PigmentSlot_Click;
+            foreach (Control c in panel.Controls) c.Click += (s, e) => PigmentSlot_Click(panel, EventArgs.Empty);
+            return panel;
+        }
+
+        private Control CreateEmptySlot(int displayIndex)
+        {
+            var panel = new Panel { Width = 130, Height = 220, BackColor = Color.LightGray, Margin = new Padding(8), Tag = null };
+            var lbl = new Label { Text = "Boş " + displayIndex, Dock = DockStyle.Fill, TextAlign = ContentAlignment.MiddleCenter };
+            panel.Controls.Add(lbl);
+            return panel;
+        }
+
+        private void PigmentSlot_Click(object sender, EventArgs e)
+        {
+            var panel = sender as Panel; if (panel == null) return;
+            if (panel.Tag == null) { selectedPigmentId = null; lblSelected.Text = "Seçili: Yok"; return; }
+            selectedPigmentId = (int)panel.Tag;
+            var nameLabel = panel.Controls.OfType<Label>().First();
+            lblSelected.Text = "Seçili: " + nameLabel.Text + " (ID=" + selectedPigmentId + ")";
+            foreach (Panel p in flwPigments.Controls.OfType<Panel>()) p.BorderStyle = BorderStyle.None;
+            panel.BorderStyle = BorderStyle.Fixed3D;
+        }
+
+        private void AdjustAmount(bool add)
+        {
+            if (selectedPigmentId == null) { MessageBox.Show("Önce pigment seçin."); return; }
+            decimal delta = numAdjust.Value; if (delta <= 0) { MessageBox.Show("Miktar > 0 olmalı."); return; }
+            if (!add) delta = -delta;
+            try
+            {
+                using (var conn = CreateConn())
+                {
+                    conn.Open();
+                    using (var cmd = new NpgsqlCommand("UPDATE pigmentler SET miktar = CASE WHEN (miktar + @d) < 0 THEN 0 ELSE miktar + @d END WHERE id=@id", conn))
+                    {
+                        cmd.Parameters.AddWithValue("@d", delta);
+                        cmd.Parameters.AddWithValue("@id", selectedPigmentId.Value);
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+                LoadPigments();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Güncelleme hatası: " + ex.Message);
+            }
+        }
+    }
+}

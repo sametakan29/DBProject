@@ -1,0 +1,18 @@
+﻿using System;
+using System.Windows.Forms;
+
+namespace dneme1
+{
+    public partial class HaznelerForm : Form
+    {
+        public HaznelerForm()
+        {
+            InitializeComponent();
+        }
+
+        private void HaznelerForm_Load(object sender, EventArgs e)
+        {
+
+        }
+    }
+}

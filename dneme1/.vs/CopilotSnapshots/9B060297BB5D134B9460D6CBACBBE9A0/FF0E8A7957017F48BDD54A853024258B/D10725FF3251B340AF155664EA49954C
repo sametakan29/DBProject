@@ -1,0 +1,159 @@
+﻿namespace dneme1
+{
+    partial class PigmentsForm
+    {
+        private System.Windows.Forms.FlowLayoutPanel flwPigments;
+        private System.Windows.Forms.NumericUpDown numAdjust;
+        private System.Windows.Forms.Button btnAddAmount;
+        private System.Windows.Forms.Button btnRemoveAmount;
+        private System.Windows.Forms.Label lblSelected;
+        private System.Windows.Forms.Label lblTitle;
+        private System.Windows.Forms.Label lblAmount;
+
+        /// <summary>
+        /// Required designer variable.
+        /// </summary>
+        private System.ComponentModel.IContainer components = null;
+
+        /// <summary>
+        /// Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && (components != null))
+            {
+                components.Dispose();
+            }
+            base.Dispose(disposing);
+        }
+
+        #region Windows Form Designer generated code
+
+        /// <summary>
+        /// Required method for Designer support - do not modify
+        /// the contents of this method with the code editor.
+        /// </summary>
+        private void InitializeComponent()
+        {
+            this.flwPigments = new System.Windows.Forms.FlowLayoutPanel();
+            this.numAdjust = new System.Windows.Forms.NumericUpDown();
+            this.btnAddAmount = new System.Windows.Forms.Button();
+            this.btnRemoveAmount = new System.Windows.Forms.Button();
+            this.lblSelected = new System.Windows.Forms.Label();
+            this.lblTitle = new System.Windows.Forms.Label();
+            this.lblAmount = new System.Windows.Forms.Label();
+            ((System.ComponentModel.ISupportInitialize)(this.numAdjust)).BeginInit();
+            this.SuspendLayout();
+            // 
+            // lblTitle
+            // 
+            this.lblTitle.AutoSize = true;
+            this.lblTitle.Font = new System.Drawing.Font("Arial", 16F, System.Drawing.FontStyle.Bold);
+            this.lblTitle.ForeColor = System.Drawing.Color.FromArgb(33, 33, 33);
+            this.lblTitle.Location = new System.Drawing.Point(360, 15);
+            this.lblTitle.Name = "lblTitle";
+            this.lblTitle.Size = new System.Drawing.Size(280, 32);
+            this.lblTitle.TabIndex = 100;
+            this.lblTitle.Text = "Pigment Yönetimi";
+            // 
+            // flwPigments
+            // 
+            this.flwPigments.AutoScroll = true;
+            this.flwPigments.BackColor = System.Drawing.Color.FromArgb(250, 250, 252);
+            this.flwPigments.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.flwPigments.Location = new System.Drawing.Point(50, 60);
+            this.flwPigments.Name = "flwPigments";
+            this.flwPigments.Padding = new System.Windows.Forms.Padding(15);
+            this.flwPigments.Size = new System.Drawing.Size(900, 450);
+            this.flwPigments.TabIndex = 0;
+            this.flwPigments.WrapContents = true;
+            // 
+            // lblAmount
+            // 
+            this.lblAmount.Font = new System.Drawing.Font("Arial", 11F);
+            this.lblAmount.Location = new System.Drawing.Point(250, 525);
+            this.lblAmount.Name = "lblAmount";
+            this.lblAmount.Size = new System.Drawing.Size(70, 24);
+            this.lblAmount.TabIndex = 101;
+            this.lblAmount.Text = "Miktar:";
+            this.lblAmount.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // numAdjust
+            // 
+            this.numAdjust.DecimalPlaces = 2;
+            this.numAdjust.Font = new System.Drawing.Font("Arial", 11F);
+            this.numAdjust.Location = new System.Drawing.Point(320, 525);
+            this.numAdjust.Maximum = new decimal(new int[] {
+            100000,
+            0,
+            0,
+            0});
+            this.numAdjust.Name = "numAdjust";
+            this.numAdjust.Size = new System.Drawing.Size(140, 28);
+            this.numAdjust.TabIndex = 1;
+            // 
+            // btnAddAmount
+            // 
+            this.btnAddAmount.BackColor = System.Drawing.Color.FromArgb(76, 175, 80);
+            this.btnAddAmount.FlatAppearance.BorderSize = 0;
+            this.btnAddAmount.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnAddAmount.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Bold);
+            this.btnAddAmount.ForeColor = System.Drawing.Color.White;
+            this.btnAddAmount.Location = new System.Drawing.Point(480, 515);
+            this.btnAddAmount.Name = "btnAddAmount";
+            this.btnAddAmount.Size = new System.Drawing.Size(170, 50);
+            this.btnAddAmount.TabIndex = 2;
+            this.btnAddAmount.Text = "+ Ekle";
+            this.btnAddAmount.UseVisualStyleBackColor = false;
+            this.btnAddAmount.Click += new System.EventHandler(this.btnAddAmount_Click);
+            // 
+            // btnRemoveAmount
+            // 
+            this.btnRemoveAmount.BackColor = System.Drawing.Color.FromArgb(244, 67, 54);
+            this.btnRemoveAmount.FlatAppearance.BorderSize = 0;
+            this.btnRemoveAmount.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnRemoveAmount.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Bold);
+            this.btnRemoveAmount.ForeColor = System.Drawing.Color.White;
+            this.btnRemoveAmount.Location = new System.Drawing.Point(660, 515);
+            this.btnRemoveAmount.Name = "btnRemoveAmount";
+            this.btnRemoveAmount.Size = new System.Drawing.Size(170, 50);
+            this.btnRemoveAmount.TabIndex = 3;
+            this.btnRemoveAmount.Text = "- Çıkar";
+            this.btnRemoveAmount.UseVisualStyleBackColor = false;
+            this.btnRemoveAmount.Click += new System.EventHandler(this.btnRemoveAmount_Click);
+            // 
+            // lblSelected
+            // 
+            this.lblSelected.Font = new System.Drawing.Font("Arial", 11F, System.Drawing.FontStyle.Italic);
+            this.lblSelected.Location = new System.Drawing.Point(50, 585);
+            this.lblSelected.Name = "lblSelected";
+            this.lblSelected.Size = new System.Drawing.Size(900, 30);
+            this.lblSelected.TabIndex = 5;
+            this.lblSelected.Text = "Seçili: Yok";
+            this.lblSelected.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // PigmentsForm
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.Color.FromArgb(240, 240, 245);
+            this.ClientSize = new System.Drawing.Size(1000, 650);
+            this.Controls.Add(this.lblAmount);
+            this.Controls.Add(this.lblTitle);
+            this.Controls.Add(this.lblSelected);
+            this.Controls.Add(this.btnRemoveAmount);
+            this.Controls.Add(this.btnAddAmount);
+            this.Controls.Add(this.numAdjust);
+            this.Controls.Add(this.flwPigments);
+            this.Name = "PigmentsForm";
+            this.Text = "Pigment Hazneleri";
+            ((System.ComponentModel.ISupportInitialize)(this.numAdjust)).EndInit();
+            this.ResumeLayout(false);
+            this.PerformLayout();
+
+        }
+
+        #endregion
+    }
+}

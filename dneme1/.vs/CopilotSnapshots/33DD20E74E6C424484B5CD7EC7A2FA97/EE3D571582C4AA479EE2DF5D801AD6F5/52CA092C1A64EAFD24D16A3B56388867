@@ -1,0 +1,241 @@
+﻿using System;
+using System.Drawing;
+using System.Windows.Forms;
+using Npgsql;
+
+namespace dneme1
+{
+    public partial class HaznelerForm : Form
+    {
+        private Panel[] haznePanels = new Panel[12];
+        private ProgressBar[] hazneProgressBars = new ProgressBar[12];
+        private Label[] hazneLabels = new Label[12];
+        private Label[] dolulukLabels = new Label[12];
+
+        public HaznelerForm()
+        {
+            InitializeComponent();
+        }
+
+        private void HaznelerForm_Load(object sender, EventArgs e)
+        {
+            HazneleriOlustur();
+            HazneSecimDoldur();
+            HazneleriYukle();
+        }
+
+        private void HazneleriOlustur()
+        {
+            int panelGenislik = 220;
+            int panelYukseklik = 140;
+            int aralik = 15;
+            int sutunSayisi = 4;
+
+            for (int i = 0; i < 12; i++)
+            {
+                int satir = i / sutunSayisi;
+                int sutun = i % sutunSayisi;
+
+                // Ana panel
+                Panel pnl = new Panel
+                {
+                    Size = new Size(panelGenislik, panelYukseklik),
+                    Location = new Point(sutun * (panelGenislik + aralik) + 10, satir * (panelYukseklik + aralik) + 10),
+                    BorderStyle = BorderStyle.FixedSingle,
+                    BackColor = Color.White
+                };
+
+                // Hazne başlığı
+                Label lblBaslik = new Label
+                {
+                    Text = $"Hazne {i + 1}",
+                    Font = new Font("Segoe UI", 12, FontStyle.Bold),
+                    Location = new Point(10, 10),
+                    AutoSize = true,
+                    ForeColor = Color.DarkBlue
+                };
+                hazneLabels[i] = lblBaslik;
+
+                // Progress bar (doluluk göstergesi)
+                ProgressBar pb = new ProgressBar
+                {
+                    Minimum = 0,
+                    Maximum = 100,
+                    Value = 0,
+                    Size = new Size(panelGenislik - 30, 30),
+                    Location = new Point(10, 50),
+                    Style = ProgressBarStyle.Continuous
+                };
+                hazneProgressBars[i] = pb;
+
+                // Doluluk yüzdesi label
+                Label lblDoluluk = new Label
+                {
+                    Text = "0 / 100 kg (%0)",
+                    Font = new Font("Segoe UI", 10),
+                    Location = new Point(10, 90),
+                    AutoSize = true,
+                    ForeColor = Color.DarkGray
+                };
+                dolulukLabels[i] = lblDoluluk;
+
+                pnl.Controls.Add(lblBaslik);
+                pnl.Controls.Add(pb);
+                pnl.Controls.Add(lblDoluluk);
+
+                haznePanels[i] = pnl;
+                pnlHazneler.Controls.Add(pnl);
+            }
+        }
+
+        private void HazneSecimDoldur()
+        {
+            cmbHazneSecim.Items.Clear();
+            for (int i = 1; i <= 12; i++)
+            {
+                cmbHazneSecim.Items.Add($"Hazne {i}");
+            }
+            cmbHazneSecim.SelectedIndex = 0;
+        }
+
+        private void HazneleriYukle()
+        {
+            try
+            {
+                using (var conn = DatabaseHelper.GetConnection())
+                {
+                    conn.Open();
+                    string sql = "SELECT hazne_no, doluluk, kapasite FROM hazneler ORDER BY hazne_no";
+                    
+                    using (var cmd = new NpgsqlCommand(sql, conn))
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            int hazneNo = reader.GetInt32(0);
+                            decimal doluluk = reader.GetDecimal(1);
+                            decimal kapasite = reader.GetDecimal(2);
+
+                            if (hazneNo >= 1 && hazneNo <= 12)
+                            {
+                                int index = hazneNo - 1;
+                                int yuzde = kapasite > 0 ? (int)((doluluk / kapasite) * 100) : 0;
+                                
+                                hazneProgressBars[index].Value = Math.Min(yuzde, 100);
+                                dolulukLabels[index].Text = $"{doluluk:F1} / {kapasite:F0} kg (%{yuzde})";
+                                
+                                // Renk kodlaması
+                                if (yuzde < 30)
+                                    haznePanels[index].BackColor = Color.FromArgb(255, 200, 200); // Kırmızımsı
+                                else if (yuzde < 70)
+                                    haznePanels[index].BackColor = Color.FromArgb(255, 255, 200); // Sarımsı
+                                else
+                                    haznePanels[index].BackColor = Color.FromArgb(200, 255, 200); // Yeşilimsi
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Hazneler yüklenirken hata oluştu:\n{ex.Message}", "Hata", 
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void btnHazneEkle_Click(object sender, EventArgs e)
+        {
+            HazneMiktarGuncelle(true);
+        }
+
+        private void btnHazneCikar_Click(object sender, EventArgs e)
+        {
+            HazneMiktarGuncelle(false);
+        }
+
+        private void HazneMiktarGuncelle(bool ekleme)
+        {
+            if (cmbHazneSecim.SelectedIndex < 0)
+            {
+                MessageBox.Show("Lütfen bir hazne seçin.", "Uyarı", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            if (!decimal.TryParse(txtMiktar.Text, out decimal miktar) || miktar <= 0)
+            {
+                MessageBox.Show("Lütfen geçerli bir miktar girin.", "Uyarı", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            int hazneNo = cmbHazneSecim.SelectedIndex + 1;
+            string islem = ekleme ? "+" : "-";
+
+            try
+            {
+                using (var conn = DatabaseHelper.GetConnection())
+                {
+                    conn.Open();
+                    
+                    // Önce mevcut doluluk ve kapasiteyi kontrol et
+                    string kontrolSql = "SELECT doluluk, kapasite FROM hazneler WHERE hazne_no = @hazneNo";
+                    decimal mevcutDoluluk = 0;
+                    decimal kapasite = 100;
+                    
+                    using (var kontrolCmd = new NpgsqlCommand(kontrolSql, conn))
+                    {
+                        kontrolCmd.Parameters.AddWithValue("@hazneNo", hazneNo);
+                        using (var reader = kontrolCmd.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+                                mevcutDoluluk = reader.GetDecimal(0);
+                                kapasite = reader.GetDecimal(1);
+                            }
+                        }
+                    }
+
+                    decimal yeniDoluluk = ekleme ? mevcutDoluluk + miktar : mevcutDoluluk - miktar;
+                    
+                    if (yeniDoluluk < 0)
+                    {
+                        MessageBox.Show("Haznede yeterli miktar yok!", "Uyarı", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        return;
+                    }
+                    
+                    if (yeniDoluluk > kapasite)
+                    {
+                        MessageBox.Show($"Hazne kapasitesi aşılıyor! Maksimum: {kapasite} kg", "Uyarı", 
+                            MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        return;
+                    }
+
+                    string sql = $"UPDATE hazneler SET doluluk = doluluk {islem} @miktar WHERE hazne_no = @hazneNo";
+                    
+                    using (var cmd = new NpgsqlCommand(sql, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@miktar", miktar);
+                        cmd.Parameters.AddWithValue("@hazneNo", hazneNo);
+                        cmd.ExecuteNonQuery();
+                    }
+
+                    string islemAdi = ekleme ? "eklendi" : "çıkarıldı";
+                    MessageBox.Show($"Hazne {hazneNo}'e {miktar} kg {islemAdi}.", "Başarılı", 
+                        MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    
+                    HazneleriYukle();
+                    txtMiktar.Text = "0";
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"İşlem sırasında hata oluştu:\n{ex.Message}", "Hata", 
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void btnYenile_Click(object sender, EventArgs e)
+        {
+            HazneleriYukle();
+        }
+    }
+}

@@ -1,0 +1,30 @@
+﻿using System;
+using System.Drawing;
+using System.Windows.Forms;
+
+namespace dneme1
+{
+    public partial class HaznelerForm : Form
+    {
+        private ProgressBar progressBar1;
+        private Button button1;
+        private TextBox textBox1;
+        private Button button2;
+        private Label label1;
+
+        public HaznelerForm()
+        {
+            InitializeComponent();
+        }
+
+        private void HaznelerForm_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label1_Click(object sender, EventArgs e)
+        {
+
+        }
+    }
+}

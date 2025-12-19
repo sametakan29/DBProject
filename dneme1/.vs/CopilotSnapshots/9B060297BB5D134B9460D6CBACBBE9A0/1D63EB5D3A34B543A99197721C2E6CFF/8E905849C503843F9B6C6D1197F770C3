@@ -1,0 +1,59 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using Npgsql;
+
+namespace dneme1
+{
+    public partial class Form1 : Form
+    {
+        public Form1()
+        {
+            InitializeComponent();
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            // Form yüklendiğinde SKT kontrolünü çalıştır ve göster
+            SKTKontrolGoster();
+        }
+
+        // FUNCTION TEST: Son Kullanma Tarihi Kontrol
+        private void SKTKontrolGoster()
+        {
+            try
+            {
+                NpgsqlConnection conn = new NpgsqlConnection("Server=localhost;Port=5432;Database=devam2;User ID=postgres;Password=admin;");
+                conn.Open();
+
+                // Function'ı çağır
+                NpgsqlCommand comm = new NpgsqlCommand();
+                comm.Connection = conn;
+                comm.CommandType = CommandType.Text;
+                comm.CommandText = "SELECT * FROM skt_kontrol()";
+
+                NpgsqlDataReader dr = comm.ExecuteReader();
+
+                if (dr.HasRows)
+                {
+                    DataTable dt = new DataTable();
+                    dt.Load(dr);
+                    dataGridView1.DataSource = dt;
+                }
+
+                comm.Dispose();
+                conn.Close();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Hata: " + ex.Message);
+            }
+        }
+    }
+}

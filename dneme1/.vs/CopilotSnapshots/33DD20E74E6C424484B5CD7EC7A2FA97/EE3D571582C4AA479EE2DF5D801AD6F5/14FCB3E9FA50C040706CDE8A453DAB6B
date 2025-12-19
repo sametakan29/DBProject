@@ -1,0 +1,35 @@
+﻿namespace dneme1
+{
+    partial class HaznelerForm
+    {
+        private System.ComponentModel.IContainer components = null;
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && (components != null))
+            {
+                components.Dispose();
+            }
+            base.Dispose(disposing);
+        }
+
+        #region Windows Form Designer generated code
+
+        private void InitializeComponent()
+        {
+            this.SuspendLayout();
+            // 
+            // HaznelerForm
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Name = "HaznelerForm";
+            this.Text = "Hazneler";
+            this.Load += new System.EventHandler(this.HaznelerForm_Load);
+            this.ResumeLayout(false);
+        }
+
+        #endregion
+    }
+}
