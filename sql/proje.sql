@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
-\restrict ceDfUozP5tPENXCbFgxKUOM1akl3hlKPIZNPdlHS1VtUCmTs2DaYrM6u9lryXp7
+\restrict 0rJNHsoFr8LJ7g3NC3pwFn3gnpDNFDqzAJx4eBUK1wvICewPqjs1Wh7FXRvk0iT
 
 -- Dumped from database version 18.0
 -- Dumped by pg_dump version 18.0
@@ -27,9 +27,9 @@ DROP DATABASE boyamakinedevami;
 CREATE DATABASE boyamakinedevami WITH TEMPLATE = template0 ENCODING = 'UTF8' LOCALE_PROVIDER = libc LOCALE = 'English_United States.1254';
 
 
-\unrestrict ceDfUozP5tPENXCbFgxKUOM1akl3hlKPIZNPdlHS1VtUCmTs2DaYrM6u9lryXp7
+\unrestrict 0rJNHsoFr8LJ7g3NC3pwFn3gnpDNFDqzAJx4eBUK1wvICewPqjs1Wh7FXRvk0iT
 \connect boyamakinedevami
-\restrict ceDfUozP5tPENXCbFgxKUOM1akl3hlKPIZNPdlHS1VtUCmTs2DaYrM6u9lryXp7
+\restrict 0rJNHsoFr8LJ7g3NC3pwFn3gnpDNFDqzAJx4eBUK1wvICewPqjs1Wh7FXRvk0iT
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -368,6 +368,37 @@ $$;
 
 
 --
+-- Name: stok_arttir(character varying, integer); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.stok_arttir(p_pigment character varying, p_miktar integer) RETURNS void
+    LANGUAGE plpgsql
+    AS $$
+BEGIN
+    UPDATE stok
+    SET kalanpigmentgr = kalanpigmentgr + p_miktar
+    WHERE pigmentisim = p_pigment;
+END;
+$$;
+
+
+--
+-- Name: stok_azalt(character varying, integer); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.stok_azalt(p_pigment character varying, p_miktar integer) RETURNS void
+    LANGUAGE plpgsql
+    AS $$
+BEGIN
+    UPDATE stok
+    SET kalanpigmentgr = kalanpigmentgr - p_miktar
+    WHERE pigmentisim = p_pigment
+      AND kalanpigmentgr >= p_miktar;
+END;
+$$;
+
+
+--
 -- Name: stok_azalt_trigger(); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -420,22 +451,15 @@ $$;
 
 
 --
--- Name: stok_hareket_cikar_trigger(); Type: FUNCTION; Schema: public; Owner: -
+-- Name: stok_hareket_cikar_trg_fn(); Type: FUNCTION; Schema: public; Owner: -
 --
 
-CREATE FUNCTION public.stok_hareket_cikar_trigger() RETURNS trigger
+CREATE FUNCTION public.stok_hareket_cikar_trg_fn() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
 BEGIN
     IF NEW.tur = 'CIKAR' THEN
-        UPDATE stok
-        SET kalanpigmentgr = kalanpigmentgr - NEW.miktar
-        WHERE pigmentisim = NEW.pigmentisim;  -- Sadece isim ile e┼şle┼ştir
-        
-        -- Debug: Ka├ğ sat─▒r etkilendi?
-        IF NOT FOUND THEN
-            RAISE NOTICE 'UYARI: % pigmenti stok tablosunda bulunamad─▒!', NEW.pigmentisim;
-        END IF;
+        PERFORM stok_azalt(NEW.pigmentisim, NEW.miktar);
     END IF;
     RETURN NEW;
 END;
@@ -443,22 +467,15 @@ $$;
 
 
 --
--- Name: stok_hareket_ekle_trigger(); Type: FUNCTION; Schema: public; Owner: -
+-- Name: stok_hareket_ekle_trg_fn(); Type: FUNCTION; Schema: public; Owner: -
 --
 
-CREATE FUNCTION public.stok_hareket_ekle_trigger() RETURNS trigger
+CREATE FUNCTION public.stok_hareket_ekle_trg_fn() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
 BEGIN
     IF NEW.tur = 'EKLE' THEN
-        UPDATE stok
-        SET kalanpigmentgr = kalanpigmentgr + NEW.miktar
-        WHERE pigmentisim = NEW.pigmentisim;  -- Sadece isim ile e┼şle┼ştir
-        
-        -- Debug: Ka├ğ sat─▒r etkilendi?
-        IF NOT FOUND THEN
-            RAISE NOTICE 'UYARI: % pigmenti stok tablosunda bulunamad─▒!', NEW.pigmentisim;
-        END IF;
+        PERFORM stok_arttir(NEW.pigmentisim, NEW.miktar);
     END IF;
     RETURN NEW;
 END;
@@ -619,7 +636,8 @@ CREATE TABLE public.karisimkagidi (
     bazkg integer,
     musterisoyad character varying,
     dukkantelno character varying,
-    musteriadres character varying
+    musteriadres character varying,
+    musterirolno integer
 );
 
 
@@ -924,7 +942,7 @@ ALTER TABLE ONLY public.yapilanboya ALTER COLUMN islemno SET DEFAULT nextval('pu
 -- Data for Name: bakimkaydi; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-INSERT INTO public.bakimkaydi (bakimno, bakimtarihi, bakimturu, personelrolno) VALUES (1, '2025-12-19', 'Boya Pompası', 4);
+INSERT INTO public.bakimkaydi (bakimno, bakimtarihi, bakimturu, personelrolno) VALUES (4, '2025-12-20', 'Boya Pompası', 19);
 
 
 --
@@ -957,11 +975,10 @@ INSERT INTO public.boyafirmasi (firmaismi, firmaadres, firmailetisim, yetkiliism
 
 INSERT INTO public.dukkan (dukkanno, ad, adres, telefonno) VALUES (1, 'sais', 'gumushane', '0535');
 INSERT INTO public.dukkan (dukkanno, ad, adres, telefonno) VALUES (2, 'Yapı Market Kadıköy', 'Kadıköy Bahariye Cad. No:78', '0216-555-1001');
-INSERT INTO public.dukkan (dukkanno, ad, adres, telefonno) VALUES (3, 'Boya Dünyası Beşiktaş', 'Beşiktaş Barbaros Bulvarı 145', '0212-555-1002');
-INSERT INTO public.dukkan (dukkanno, ad, adres, telefonno) VALUES (4, 'Renk Sarayı Ankara', 'Ankara Kızılay Atatürk Bulvarı 234', '0312-555-1003');
 INSERT INTO public.dukkan (dukkanno, ad, adres, telefonno) VALUES (5, 'Mega Yapı İzmir', 'İzmir Alsancak Kordon 567', '0232-555-1004');
 INSERT INTO public.dukkan (dukkanno, ad, adres, telefonno) VALUES (6, 'Homeplus Bursa', 'Bursa Nilüfer Özlüce Mah.', '0224-555-1005');
 INSERT INTO public.dukkan (dukkanno, ad, adres, telefonno) VALUES (8, 'DIY Center Bakırköy', 'Bakırköy Ataköy 7-8-9-10 Mah.', '0212-555-1007');
+INSERT INTO public.dukkan (dukkanno, ad, adres, telefonno) VALUES (23, 'deneme', 'sakarya', '0456');
 
 
 --
@@ -982,16 +999,14 @@ INSERT INTO public.hazirrenk (renkkodu, renkismi, renkkartelasi) VALUES ('RAL-40
 -- Data for Name: karisimkagidi; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-INSERT INTO public.karisimkagidi (islemno, islemtarihi, musteriad, musteriiletisim, dukkanad, personelad, personelsoyad, renkismi, renkkodu, bazkg, musterisoyad, dukkantelno, musteriadres) VALUES (1, '2025-12-19 21:35:43.428142', 'musteri', 'musteri tel no', 'Boya Dünyası Beşiktaş', 'Burak', 'Çelik', 'Mavi Lila', 'RAL-4005', 10, 'ad soyad', '0212-555-1002', 'musteri adres');
-INSERT INTO public.karisimkagidi (islemno, islemtarihi, musteriad, musteriiletisim, dukkanad, personelad, personelsoyad, renkismi, renkkodu, bazkg, musterisoyad, dukkantelno, musteriadres) VALUES (2, '2025-12-19 21:40:16.935237', 'musteri', 'musteri tel no', 'Boya Dünyası Beşiktaş', 'Deniz', 'Koç', 'Açık Gri', 'RAL-7035', 10, 'ad soyad', '0212-555-1002', 'musteri adres');
-INSERT INTO public.karisimkagidi (islemno, islemtarihi, musteriad, musteriiletisim, dukkanad, personelad, personelsoyad, renkismi, renkkodu, bazkg, musterisoyad, dukkantelno, musteriadres) VALUES (3, '2025-12-19 21:43:39.412115', 'samet', 'akan', 'Boya Dünyası Beşiktaş', 'Kemal', 'Arslan', 'Trafik Kırmızısı', 'RAL-3020', 10, '', '0212-555-1002', 'sakarya');
 
 
 --
 -- Data for Name: makinelog; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-INSERT INTO public.makinelog (logno, logtarihi, bakimturu, personelrolno) VALUES (1, '2025-12-19 21:31:07.921922+03', 'Boya Pompası', 4);
+INSERT INTO public.makinelog (logno, logtarihi, bakimturu, personelrolno) VALUES (3, '2025-12-20 22:29:54.076286+03', 'Filtre Sistemi', 20);
+INSERT INTO public.makinelog (logno, logtarihi, bakimturu, personelrolno) VALUES (4, '2025-12-20 22:32:01.90558+03', 'Boya Pompası', 19);
 
 
 --
@@ -1005,11 +1020,9 @@ INSERT INTO public.makinelog (logno, logtarihi, bakimturu, personelrolno) VALUES
 --
 
 INSERT INTO public.personel (rolno, personelad, personelsoyad, personeliletisim, personelrolno) VALUES (1, 'Kemal', 'Arslan', 'kemal.arslan@boyaci.com', 1);
-INSERT INTO public.personel (rolno, personelad, personelsoyad, personeliletisim, personelrolno) VALUES (2, 'Elif', 'Yıldız', 'elif.yildiz@boyaci.com', 2);
-INSERT INTO public.personel (rolno, personelad, personelsoyad, personeliletisim, personelrolno) VALUES (3, 'Burak', 'Çelik', 'burak.celik@boyaci.com', 3);
-INSERT INTO public.personel (rolno, personelad, personelsoyad, personeliletisim, personelrolno) VALUES (4, 'Deniz', 'Koç', 'deniz.koc@boyaci.com', 4);
 INSERT INTO public.personel (rolno, personelad, personelsoyad, personeliletisim, personelrolno) VALUES (5, 'Selin', 'Aydın', 'selin.aydin@boyaci.com', 5);
 INSERT INTO public.personel (rolno, personelad, personelsoyad, personeliletisim, personelrolno) VALUES (16, 'samet', 'akan', '0500', 16);
+INSERT INTO public.personel (rolno, personelad, personelsoyad, personeliletisim, personelrolno) VALUES (19, 'k', 'l', 'p', 19);
 
 
 --
@@ -1075,9 +1088,10 @@ INSERT INTO public.roller (rolno, roladi, rolyetki, dukkanno) VALUES (15, 'Boya 
 INSERT INTO public.roller (rolno, roladi, rolyetki, dukkanno) VALUES (16, 'Müdür', 'YONETICI', 5);
 INSERT INTO public.roller (rolno, roladi, rolyetki, dukkanno) VALUES (17, 'Boya Ustası', 'BOYACI', 6);
 INSERT INTO public.roller (rolno, roladi, rolyetki, dukkanno) VALUES (18, 'Müdür', 'YONETICI', 6);
+INSERT INTO public.roller (rolno, roladi, rolyetki, dukkanno) VALUES (19, 'Boya Ustası', 'BOYACI', 23);
+INSERT INTO public.roller (rolno, roladi, rolyetki, dukkanno) VALUES (20, 'Müdür', 'YONETICI', 23);
 INSERT INTO public.roller (rolno, roladi, rolyetki, dukkanno) VALUES (1, 'Boya Ustası', 'BOYACI', 1);
 INSERT INTO public.roller (rolno, roladi, rolyetki, dukkanno) VALUES (2, 'Boya Ustası', 'BOYACI', 2);
-INSERT INTO public.roller (rolno, roladi, rolyetki, dukkanno) VALUES (3, 'Boya Ustası', 'BOYACI', 3);
 INSERT INTO public.roller (rolno, roladi, rolyetki, dukkanno) VALUES (4, 'Müdür', 'YONETICI', 1);
 INSERT INTO public.roller (rolno, roladi, rolyetki, dukkanno) VALUES (5, 'Müdür', 'YONETICI', 2);
 
@@ -1086,6 +1100,7 @@ INSERT INTO public.roller (rolno, roladi, rolyetki, dukkanno) VALUES (5, 'Müdü
 -- Data for Name: stok; Type: TABLE DATA; Schema: public; Owner: -
 --
 
+INSERT INTO public.stok (urunno, kalanpigmentgr, pigmentisim, pigmentmarka) VALUES (1, 1100, 'Titanium White', 'Marshall Boya');
 INSERT INTO public.stok (urunno, kalanpigmentgr, pigmentisim, pigmentmarka) VALUES (7, 1500, 'Burnt Sienna', 'Jotun Boya');
 INSERT INTO public.stok (urunno, kalanpigmentgr, pigmentisim, pigmentmarka) VALUES (9, 650, 'Cobalt Blue', 'Dyo Boya');
 INSERT INTO public.stok (urunno, kalanpigmentgr, pigmentisim, pigmentmarka) VALUES (10, 1100, 'Cadmium Orange', 'Dyo Boya');
@@ -1095,9 +1110,8 @@ INSERT INTO public.stok (urunno, kalanpigmentgr, pigmentisim, pigmentmarka) VALU
 INSERT INTO public.stok (urunno, kalanpigmentgr, pigmentisim, pigmentmarka) VALUES (4, 1000, 'Iron Oxide Yellow', 'Filli Boya');
 INSERT INTO public.stok (urunno, kalanpigmentgr, pigmentisim, pigmentmarka) VALUES (5, 1000, 'Chromium Oxide Green', 'Düfa Boya');
 INSERT INTO public.stok (urunno, kalanpigmentgr, pigmentisim, pigmentmarka) VALUES (6, 1000, 'Ultramarine Blue', 'Düfa Boya');
-INSERT INTO public.stok (urunno, kalanpigmentgr, pigmentisim, pigmentmarka) VALUES (2, 950, 'Carbon Black', 'Marshall Boya');
 INSERT INTO public.stok (urunno, kalanpigmentgr, pigmentisim, pigmentmarka) VALUES (3, 800, 'Iron Oxide Red', 'Filli Boya');
-INSERT INTO public.stok (urunno, kalanpigmentgr, pigmentisim, pigmentmarka) VALUES (1, 850, 'Titanium White', 'Marshall Boya');
+INSERT INTO public.stok (urunno, kalanpigmentgr, pigmentisim, pigmentmarka) VALUES (2, 900, 'Carbon Black', 'Marshall Boya');
 
 
 --
@@ -1113,43 +1127,48 @@ INSERT INTO public.stok_hareket (hareket_id, pigmentisim, pigmentmarka, miktar, 
 INSERT INTO public.stok_hareket (hareket_id, pigmentisim, pigmentmarka, miktar, tur, tarih) VALUES (7, 'Iron Oxide Yellow', 'Varsayılan', 200, 'CIKAR', '2025-12-19 21:40:02.363252');
 INSERT INTO public.stok_hareket (hareket_id, pigmentisim, pigmentmarka, miktar, tur, tarih) VALUES (8, 'Chromium Oxide Green', 'Varsayılan', 200, 'EKLE', '2025-12-19 21:40:05.061322');
 INSERT INTO public.stok_hareket (hareket_id, pigmentisim, pigmentmarka, miktar, tur, tarih) VALUES (9, 'Ultramarine Blue', 'Varsayılan', 720, 'EKLE', '2025-12-19 21:40:09.097122');
+INSERT INTO public.stok_hareket (hareket_id, pigmentisim, pigmentmarka, miktar, tur, tarih) VALUES (10, 'Titanium White', 'Varsayılan', 50, 'EKLE', '2025-12-20 21:28:07.492638');
+INSERT INTO public.stok_hareket (hareket_id, pigmentisim, pigmentmarka, miktar, tur, tarih) VALUES (11, 'Titanium White', 'Varsayılan', 50, 'CIKAR', '2025-12-20 21:28:14.789093');
+INSERT INTO public.stok_hareket (hareket_id, pigmentisim, pigmentmarka, miktar, tur, tarih) VALUES (12, 'Titanium White', 'Varsayılan', 50, 'EKLE', '2025-12-20 21:42:41.792064');
+INSERT INTO public.stok_hareket (hareket_id, pigmentisim, pigmentmarka, miktar, tur, tarih) VALUES (13, 'Titanium White', 'Varsayılan', 100, 'EKLE', '2025-12-20 21:43:36.111738');
+INSERT INTO public.stok_hareket (hareket_id, pigmentisim, pigmentmarka, miktar, tur, tarih) VALUES (14, 'Titanium White', 'Varsayılan', 50, 'CIKAR', '2025-12-20 21:43:44.60809');
+INSERT INTO public.stok_hareket (hareket_id, pigmentisim, pigmentmarka, miktar, tur, tarih) VALUES (15, 'Titanium White', 'Varsayılan', 50, 'EKLE', '2025-12-20 21:43:52.253539');
+INSERT INTO public.stok_hareket (hareket_id, pigmentisim, pigmentmarka, miktar, tur, tarih) VALUES (16, 'Titanium White', 'Varsayılan', 50, 'CIKAR', '2025-12-20 21:45:17.287949');
+INSERT INTO public.stok_hareket (hareket_id, pigmentisim, pigmentmarka, miktar, tur, tarih) VALUES (17, 'Titanium White', 'Varsayılan', 100, 'EKLE', '2025-12-20 21:45:23.184214');
 
 
 --
 -- Data for Name: yapilanboya; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-INSERT INTO public.yapilanboya (islemno, kullanilanbazkg, kullanilanpigmentgr) VALUES (1, 10, 210);
-INSERT INTO public.yapilanboya (islemno, kullanilanbazkg, kullanilanpigmentgr) VALUES (2, 10, 150);
-INSERT INTO public.yapilanboya (islemno, kullanilanbazkg, kullanilanpigmentgr) VALUES (3, 10, 250);
 
 
 --
 -- Name: bakimkaydi_bakimno_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('public.bakimkaydi_bakimno_seq', 1, true);
+SELECT pg_catalog.setval('public.bakimkaydi_bakimno_seq', 4, true);
 
 
 --
 -- Name: dukkan_dukkanno_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('public.dukkan_dukkanno_seq', 22, true);
+SELECT pg_catalog.setval('public.dukkan_dukkanno_seq', 23, true);
 
 
 --
 -- Name: global_role_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('public.global_role_seq', 18, true);
+SELECT pg_catalog.setval('public.global_role_seq', 20, true);
 
 
 --
 -- Name: makinelog_logno_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('public.makinelog_logno_seq', 1, true);
+SELECT pg_catalog.setval('public.makinelog_logno_seq', 4, true);
 
 
 --
@@ -1170,7 +1189,7 @@ SELECT pg_catalog.setval('public.renk_pigment_detay_detay_id_seq', 15, true);
 -- Name: stok_hareket_hareket_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('public.stok_hareket_hareket_id_seq', 9, true);
+SELECT pg_catalog.setval('public.stok_hareket_hareket_id_seq', 17, true);
 
 
 --
@@ -1431,6 +1450,20 @@ CREATE INDEX index_atilanpigmentgr ON public.renkpigmentorani USING btree (atila
 
 
 --
+-- Name: stok_hareket stok_hareket_cikar_trigger; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER stok_hareket_cikar_trigger AFTER INSERT ON public.stok_hareket FOR EACH ROW EXECUTE FUNCTION public.stok_hareket_cikar_trg_fn();
+
+
+--
+-- Name: stok_hareket stok_hareket_ekle_trigger; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER stok_hareket_ekle_trigger AFTER INSERT ON public.stok_hareket FOR EACH ROW EXECUTE FUNCTION public.stok_hareket_ekle_trg_fn();
+
+
+--
 -- Name: bakimkaydi trigger_log_bakim; Type: TRIGGER; Schema: public; Owner: -
 --
 
@@ -1445,25 +1478,11 @@ CREATE TRIGGER trigger_stok_azalt AFTER INSERT ON public.yapilanboya FOR EACH RO
 
 
 --
--- Name: stok_hareket trigger_stok_hareket_cikar; Type: TRIGGER; Schema: public; Owner: -
---
-
-CREATE TRIGGER trigger_stok_hareket_cikar AFTER INSERT ON public.stok_hareket FOR EACH ROW EXECUTE FUNCTION public.stok_hareket_cikar_trigger();
-
-
---
--- Name: stok_hareket trigger_stok_hareket_ekle; Type: TRIGGER; Schema: public; Owner: -
---
-
-CREATE TRIGGER trigger_stok_hareket_ekle AFTER INSERT ON public.stok_hareket FOR EACH ROW EXECUTE FUNCTION public.stok_hareket_ekle_trigger();
-
-
---
 -- Name: bakimkaydi fk_bakim_personel; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.bakimkaydi
-    ADD CONSTRAINT fk_bakim_personel FOREIGN KEY (personelrolno) REFERENCES public.personel(rolno) ON UPDATE CASCADE ON DELETE RESTRICT;
+    ADD CONSTRAINT fk_bakim_personel FOREIGN KEY (personelrolno) REFERENCES public.personel(rolno) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 --
@@ -1479,7 +1498,7 @@ ALTER TABLE ONLY public.baz
 --
 
 ALTER TABLE ONLY public.karisimkagidi
-    ADD CONSTRAINT fk_dukkan_karisimkagidi_ad FOREIGN KEY (dukkanad) REFERENCES public.dukkan(ad) ON UPDATE CASCADE ON DELETE RESTRICT;
+    ADD CONSTRAINT fk_dukkan_karisimkagidi_ad FOREIGN KEY (dukkanad) REFERENCES public.dukkan(ad) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 --
@@ -1503,7 +1522,7 @@ ALTER TABLE ONLY public.musteri
 --
 
 ALTER TABLE ONLY public.personel
-    ADD CONSTRAINT fk_personel_roller FOREIGN KEY (rolno) REFERENCES public.roller(rolno) ON UPDATE SET NULL ON DELETE SET NULL;
+    ADD CONSTRAINT fk_personel_roller FOREIGN KEY (rolno) REFERENCES public.roller(rolno) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 --
@@ -1535,7 +1554,7 @@ ALTER TABLE ONLY public.stok
 --
 
 ALTER TABLE ONLY public.karisimkagidi
-    ADD CONSTRAINT link_dukkan_karisimkagidi_tel FOREIGN KEY (dukkantelno) REFERENCES public.dukkan(telefonno) MATCH FULL ON UPDATE CASCADE ON DELETE RESTRICT;
+    ADD CONSTRAINT link_dukkan_karisimkagidi_tel FOREIGN KEY (dukkantelno) REFERENCES public.dukkan(telefonno) MATCH FULL ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 --
@@ -1544,6 +1563,14 @@ ALTER TABLE ONLY public.karisimkagidi
 
 ALTER TABLE ONLY public.yapilanboya
     ADD CONSTRAINT link_karisimkagidi_yapilanboya FOREIGN KEY (islemno) REFERENCES public.karisimkagidi(islemno) MATCH FULL ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: karisimkagidi link_musteri_karisimkagidi; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.karisimkagidi
+    ADD CONSTRAINT link_musteri_karisimkagidi FOREIGN KEY (musterirolno) REFERENCES public.musteri(rolno) MATCH FULL ON UPDATE CASCADE ON DELETE RESTRICT;
 
 
 --
@@ -1566,5 +1593,5 @@ ALTER TABLE ONLY public.renk_pigment_detay
 -- PostgreSQL database dump complete
 --
 
-\unrestrict ceDfUozP5tPENXCbFgxKUOM1akl3hlKPIZNPdlHS1VtUCmTs2DaYrM6u9lryXp7
+\unrestrict 0rJNHsoFr8LJ7g3NC3pwFn3gnpDNFDqzAJx4eBUK1wvICewPqjs1Wh7FXRvk0iT
 

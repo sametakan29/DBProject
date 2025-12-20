@@ -164,50 +164,29 @@ namespace dneme1
             }
         }
 
-        // Veritabanına stok hareketi ekle (sadece pigment ismi ile)
         private bool StokHareketEkle(string pigmentIsim, int miktar, string tur)
         {
-            try
+            using (var connection = DatabaseHelper.GetConnection())
             {
-                using (var connection = DatabaseHelper.GetConnection())
+                connection.Open();
+
+                string query = @"
+            INSERT INTO stok_hareket 
+            (pigmentisim, pigmentmarka, miktar, tur, tarih)
+            VALUES 
+            (@pigmentisim, 'Varsayılan', @miktar, @tur, NOW())";
+
+                using (var command = new NpgsqlCommand(query, connection))
                 {
-                    connection.Open();
+                    command.Parameters.AddWithValue("@pigmentisim", pigmentIsim);
+                    command.Parameters.AddWithValue("@miktar", miktar);
+                    command.Parameters.AddWithValue("@tur", tur);
 
-                    // Tablo ismi: stok_hareket (stok_hareketi değil)
-                    // pigmentmarka artık önemli değil, trigger sadece pigmentisim ile eşleşiyor
-                    string query = @"
-                        INSERT INTO stok_hareket (pigmentisim, pigmentmarka, miktar, tur, tarih)
-                        VALUES (@pigmentisim, 'Varsayılan', @miktar, @tur, @tarih)";
-
-                    using (var command = new NpgsqlCommand(query, connection))
-                    {
-                        command.Parameters.AddWithValue("@pigmentisim", pigmentIsim);
-                        command.Parameters.AddWithValue("@miktar", miktar);
-                        command.Parameters.AddWithValue("@tur", tur);
-                        command.Parameters.AddWithValue("@tarih", DateTime.Now);
-
-                        int rowsAffected = command.ExecuteNonQuery();
-
-                        if (rowsAffected > 0)
-                        {
-                            return true;
-                        }
-                        else
-                        {
-                            MessageBox.Show("Stok hareketi kaydedilemedi!", "Hata",
-                                MessageBoxButtons.OK, MessageBoxIcon.Error);
-                            return false;
-                        }
-                    }
+                    return command.ExecuteNonQuery() > 0;
                 }
             }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Stok hareketi kaydedilirken hata oluştu:\n{ex.Message}\n\nDetay: {ex.ToString()}",
-                    "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return false;
-            }
         }
+
 
         private void HazneBilgileriniYukle()
         {

@@ -3,7 +3,23 @@
   "WorkspaceRootPath": "C:\\Users\\akans\\OneDrive\\Masa\u00FCst\u00FC\\vtys-project\\yedek\u015Fer\\2\\3\\dneme1\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{E8851460-0BD3-40B7-AF66-335074812C39}|dneme1\\dneme1.csproj|c:\\users\\akans\\onedrive\\masa\u00FCst\u00FC\\vtys-project\\yedek\u015Fer\\2\\3\\dneme1\\dneme1\\anaform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "AbsoluteMoniker": "D:0:0:{E8851460-0BD3-40B7-AF66-335074812C39}|dneme1\\dneme1.csproj|c:\\users\\akans\\onedrive\\masa\u00FCst\u00FC\\vtys-project\\yedek\u015Fer\\2\\3\\dneme1\\dneme1\\hazneler.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E8851460-0BD3-40B7-AF66-335074812C39}|dneme1\\dneme1.csproj|solutionrelative:dneme1\\hazneler.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E8851460-0BD3-40B7-AF66-335074812C39}|dneme1\\dneme1.csproj|C:\\Users\\akans\\OneDrive\\Masa\u00FCst\u00FC\\vtys-project\\yedek\u015Fer\\2\\3\\dneme1\\dneme1\\hazneler.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{E8851460-0BD3-40B7-AF66-335074812C39}|dneme1\\dneme1.csproj|solutionrelative:dneme1\\hazneler.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E8851460-0BD3-40B7-AF66-335074812C39}|dneme1\\dneme1.csproj|C:\\Users\\akans\\OneDrive\\Masa\u00FCst\u00FC\\vtys-project\\yedek\u015Fer\\2\\3\\dneme1\\dneme1\\boyayap.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E8851460-0BD3-40B7-AF66-335074812C39}|dneme1\\dneme1.csproj|solutionrelative:dneme1\\boyayap.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E8851460-0BD3-40B7-AF66-335074812C39}|dneme1\\dneme1.csproj|C:\\Users\\akans\\OneDrive\\Masa\u00FCst\u00FC\\vtys-project\\yedek\u015Fer\\2\\3\\dneme1\\dneme1\\boyayap.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{E8851460-0BD3-40B7-AF66-335074812C39}|dneme1\\dneme1.csproj|solutionrelative:dneme1\\boyayap.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E8851460-0BD3-40B7-AF66-335074812C39}|dneme1\\dneme1.csproj|C:\\Users\\akans\\OneDrive\\Masa\u00FCst\u00FC\\vtys-project\\yedek\u015Fer\\2\\3\\dneme1\\dneme1\\anaform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
       "RelativeMoniker": "D:0:0:{E8851460-0BD3-40B7-AF66-335074812C39}|dneme1\\dneme1.csproj|solutionrelative:dneme1\\anaform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
     },
     {
@@ -18,11 +34,58 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 1,
+          "SelectedChildIndex": 0,
           "Children": [
             {
               "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "hazneler.cs",
+              "DocumentMoniker": "C:\\Users\\akans\\OneDrive\\Masa\u00FCst\u00FC\\vtys-project\\yedek\u015Fer\\2\\3\\dneme1\\dneme1\\hazneler.cs",
+              "RelativeDocumentMoniker": "dneme1\\hazneler.cs",
+              "ToolTip": "C:\\Users\\akans\\OneDrive\\Masa\u00FCst\u00FC\\vtys-project\\yedek\u015Fer\\2\\3\\dneme1\\dneme1\\hazneler.cs",
+              "RelativeToolTip": "dneme1\\hazneler.cs",
+              "ViewState": "AgIAAJsAAAAAAAAAAAAIwKQAAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-20T18:36:27.052Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
               "DocumentIndex": 1,
+              "Title": "hazneler.cs [Design]",
+              "DocumentMoniker": "C:\\Users\\akans\\OneDrive\\Masa\u00FCst\u00FC\\vtys-project\\yedek\u015Fer\\2\\3\\dneme1\\dneme1\\hazneler.cs",
+              "RelativeDocumentMoniker": "dneme1\\hazneler.cs",
+              "ToolTip": "C:\\Users\\akans\\OneDrive\\Masa\u00FCst\u00FC\\vtys-project\\yedek\u015Fer\\2\\3\\dneme1\\dneme1\\hazneler.cs [Design]",
+              "RelativeToolTip": "dneme1\\hazneler.cs [Design]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-20T18:36:25.849Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "BoyaYap.cs",
+              "DocumentMoniker": "C:\\Users\\akans\\OneDrive\\Masa\u00FCst\u00FC\\vtys-project\\yedek\u015Fer\\2\\3\\dneme1\\dneme1\\BoyaYap.cs",
+              "RelativeDocumentMoniker": "dneme1\\BoyaYap.cs",
+              "ToolTip": "C:\\Users\\akans\\OneDrive\\Masa\u00FCst\u00FC\\vtys-project\\yedek\u015Fer\\2\\3\\dneme1\\dneme1\\BoyaYap.cs",
+              "RelativeToolTip": "dneme1\\BoyaYap.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAADcAAAAMAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-20T16:17:10.732Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "BoyaYap.cs [Design]",
+              "DocumentMoniker": "C:\\Users\\akans\\OneDrive\\Masa\u00FCst\u00FC\\vtys-project\\yedek\u015Fer\\2\\3\\dneme1\\dneme1\\BoyaYap.cs",
+              "RelativeDocumentMoniker": "dneme1\\BoyaYap.cs",
+              "ToolTip": "C:\\Users\\akans\\OneDrive\\Masa\u00FCst\u00FC\\vtys-project\\yedek\u015Fer\\2\\3\\dneme1\\dneme1\\BoyaYap.cs [Design]",
+              "RelativeToolTip": "dneme1\\BoyaYap.cs [Design]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-20T16:16:28.829Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
               "Title": "AnaForm.cs",
               "DocumentMoniker": "C:\\Users\\akans\\OneDrive\\Masa\u00FCst\u00FC\\vtys-project\\yedek\u015Fer\\2\\3\\dneme1\\dneme1\\AnaForm.cs",
               "RelativeDocumentMoniker": "dneme1\\AnaForm.cs",
@@ -30,20 +93,18 @@
               "RelativeToolTip": "dneme1\\AnaForm.cs",
               "ViewState": "AgIAACsAAAAAAAAAAAAAAEIAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-12-16T11:59:26.067Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-12-16T11:59:26.067Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 4,
               "Title": "AnaForm.cs [Design]",
               "DocumentMoniker": "C:\\Users\\akans\\OneDrive\\Masa\u00FCst\u00FC\\vtys-project\\yedek\u015Fer\\2\\3\\dneme1\\dneme1\\AnaForm.cs",
               "RelativeDocumentMoniker": "dneme1\\AnaForm.cs",
               "ToolTip": "C:\\Users\\akans\\OneDrive\\Masa\u00FCst\u00FC\\vtys-project\\yedek\u015Fer\\2\\3\\dneme1\\dneme1\\AnaForm.cs [Design]",
               "RelativeToolTip": "dneme1\\AnaForm.cs [Design]",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-12-16T11:37:27.142Z",
-              "EditorCaption": " [Design]"
+              "WhenOpened": "2025-12-16T11:37:27.142Z"
             }
           ]
         }
